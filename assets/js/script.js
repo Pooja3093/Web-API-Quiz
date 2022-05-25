@@ -91,7 +91,7 @@ function displayQuestion(index){
   userChoices.forEach(function (newItem) {
     var listItem = document.createElement("li");
     listItem.textContent = newItem;
-    listItem.setAttribute('style','list-style-type:none; background-color:lightblue; margin: 5px; text-align:center; border-style:rounded');
+    listItem.setAttribute('style','list-style-type:none; background-color:lightblue; margin: 5px; text-align:center; border-style:rounded; cursor:grab');
     questionContainer.appendChild(ulCreate);
     ulCreate.appendChild(listItem);
     listItem.addEventListener("click", (checkAnswer));
