@@ -43,18 +43,12 @@ var penalty =10;
 var num = [0,1,2,3,4];
 var index = 0;
 var userScore;
+var userInitials;
+var storedInitials;
+var storedScores;
 
 
-// The startGame function is called when the start button is clicked
-function startGame() {
-  
-  // Prevents start button from being clicked when round is in progress
-  startButton.disabled = true;
-  // displayQuestion(index);
-}
-
-
-// Render question on screen
+// Render question on screen on the click of Start button
 function renderQuestion(){
   // Start timer
   startTimer();
@@ -97,6 +91,7 @@ function displayQuestion(index){
   userChoices.forEach(function (newItem) {
     var listItem = document.createElement("li");
     listItem.textContent = newItem;
+    listItem.setAttribute('style','list-style-type:none; background-color:lightblue; margin: 5px; text-align:center; border-style:rounded');
     questionContainer.appendChild(ulCreate);
     ulCreate.appendChild(listItem);
     listItem.addEventListener("click", (checkAnswer));
@@ -110,16 +105,20 @@ function checkAnswer(event){
   // Check for wrong answer and penalize 10 seconds if so
   if(userAnswer.textContent != questionSet[index].correctAnswer){
     timerCount = timerCount - penalty;
+    // If 
     if(timerCount <= 0){
+      alert("Times Up!");
       clearInterval(timer);
       gameOver();
       return;
     }
   }
   index++;
+  // If all questions are answered, stop timer and get score
   if (index >= questionSet.length) {
     userScore = timerCount;
     clearInterval(timer);
+    alert("Quiz over!");
     gameOver();
     return;
   } else {
@@ -130,23 +129,31 @@ function checkAnswer(event){
 
 // Stores the scores in local storage
 function gameOver() {
-  var userInitials = prompt("Please enter your initials.");
-  var userScore = timerCount;
+  userInitials = prompt("Please enter your initials.");
+  userScore = timerCount;
+
+  // Reset timer and display
   timerCount = 0;
-  var highScores = [userInitials, userScore];
-  localStorage.setItem("HighScores", highScores);
   timerElement.textContent = timerCount;
-}
 
+  // // Clear quiz container
+  // questionContainer.textContent = "";
+  // ulCreate.textContent = "";
 
-// Retrive score from local storage and display
-function displayScore() {
-  // Get stored value from client storage, if it exists
-  var storedScores = localStorage.getItem("highScore");
-  
-  questionContainer.textContent = "";
-  ulCreate.textContent = "";
-  var listScore = document.createElement("li");
+  // Get stored scores and compare for highscore
+  storedScores = localStorage.getItem("HighScore");
+  storedInitials = localStorage.getItem("Initials");
+  if(storedScores === null && storedInitials === null){
+    alert("Congratulations! You made a new high score." + "\n" + "Your score: " + userScore);
+    localStorage.setItem("HighScore", userScore);
+    localStorage.setItem("Initials", userInitials);
+  } else if(userScore >= storedScores){
+    alert("Congratulations! You made a new high score.");
+    localStorage.setItem("HighScore", userScore);
+    localStorage.setItem("Initials", userInitials);
+  } else {
+    alert("Your Score: " + userScore + "\n" + "HighScore: " + storedScores + " by " + storedInitials);
+  }
 }
 
 
