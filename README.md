@@ -9,7 +9,9 @@ This ia a timed quiz. For each incorrect answer 10 seconds penalty is deducted f
 ## Links:
 
 [GitHub Repository]()
+
 [Deployed Application]()
+
 [Full Demo Video](https://drive.google.com/file/d/1U3wQsAhRqnC3ix0BMdgz3-bO0NQj7AQh/view)
 
 
