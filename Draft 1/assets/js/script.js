@@ -2,34 +2,35 @@
 var questionSet = [{
   question: "Web API supports which of the following protocol?",
   choices: ["TCP", "HTTP", "Soap", "All of the above"],
-  correct: "4"
+  correctAnswer: "All of the above"
 },
 {
-  question: "Web API supports which of the following request/response data formats by default?",
-  choices: ["JSON", "XML", "BSON", "All of the above"],
-  correct: "4"
+  question: "A very useful tool for used during development and debugging for printing content to the debugger is:",
+  choices: ["Javascript", "terminal / bash", "for loops", "console log"],
+  correctAnswer: "console log"
 },
 {
   question: "Web API uses which of the following open-source library for JSON serialization?",
   choices: ["Json.NET", "JsonFormatter.NET", "GetJson.NET", "None of the above"], 
-  correct: "1"
+  correctAnswer: "Json.NET"
 },
 {
   question: "Which of the following action method names are valid to handle HTTP GET request?",
   choices: ["Get()", "GetStudent()", "GetStudentAll()", "All of the above"],
-  correct: "4"
+  correctAnswer: "All of the above"
 },
 {
   question: "Web API uses which of the following NET framework?",
-  choices: [".NET 2.0", ".NET 3.0", ".NET 3.5", ".NET 4.0"],
-  correct: "4"
+  choices: [".NET 2.0", ".NET 4.0", ".NET 3.5", ".NET 3.0"],
+  correctAnswer: ".NET 4.0"
 }
 ];
 
 var startButton = document.querySelector(".start-button");
 var optionContainer = document.querySelector(".option-container");
 var timerElement = document.querySelector(".timer-count");
-var q = document.querySelector(".question-container");
+var questionContainer = document.querySelector(".question-container");
+var ulCreate = document.querySelector("#options");
 var op1 = document.querySelector("#op1");
 var op2 = document.querySelector("#op2");
 var op3 = document.querySelector("#op3");
@@ -37,58 +38,31 @@ var op4 = document.querySelector("#op4");
 
 var timer;
 var timerCount;
-var answer;
 var show;
 var penalty =10;
 var num = [0,1,2,3,4];
+var index = 0;
+var userScore;
 
-// Shuffle questioSet object for random selection
-function shuffle(questionSet) {
-  for (var i = 0; i < questionSet.length - 1; i++) {
-      var j = i + Math.floor(Math.random() * (questionSet.length - i));
 
-      var temp = questionSet[j];
-      questionSet[j] = questionSet[i];
-      questionSet[i] = temp;
-  }
-  return questionSet;
+// The startGame function is called when the start button is clicked
+function startGame() {
+  
+  // Prevents start button from being clicked when round is in progress
+  startButton.disabled = true;
+  // displayQuestion(index);
 }
 
 
-var shuffledQuestionSet = shuffle(questionSet);
-
-
-function diaplayQuestion(abc){
-  q.textContent = abc.question;
-  op1.textContent = abc.option1;
-  op2.textContent = abc.option2;
-  op3.textContent = abc.option3;
-  op4.textContent = abc.option4;
-  optionContainer.addEventListener("click", checkAnswer , {once: true});
-  return;
-  choice.forEach(function (newItem) {
-    listItem.textContent = newItem;
-    questionsDiv.appendChild(ulCreate);
-    ulCreate.appendChild(listItem);
-    listItem.addEventListener("click", (compare));
-})
+// Render question on screen
+function renderQuestion(){
+  // Start timer
+  startTimer();
+  displayQuestion(index);
 }
 
 
-function checkAnswer(event){
-  answer = event.target;
-  // Check for wrong answer and penalize 10 seconds if so
-  if(answer.value != show.correct){
-    timerCount = timerCount - penalty;
-    if(timerCount <= 0){
-      gameOver();
-    }
-  }
-  return;
-}
-
-
-// The setTimer function starts and stops the timer and triggers winGame() and loseGame()
+// Start timer from 60 seconds
 function startTimer() {
   // Sets timer
   timerCount = 60;
@@ -98,68 +72,82 @@ function startTimer() {
     // Tests if time has run out
     if (timerCount === 0) {
       // Clears interval
+      alert("Times up!");
       clearInterval(timer);
       gameOver();
+      return;
     }
   }, 1000);
   return;
 }
 
-// Render question on screen
-function renderQuestion(){
-  // Start timer
-  startTimer();
 
-  if(timerCount >= 0){
-    for(i = 0; i < shuffledQuestionSet.length; i++) {
-      show = shuffledQuestionSet[i];
-      diaplayQuestion(show);
+// Display question and options
+function displayQuestion(index){
+  // Clear existing data on display
+  questionContainer.textContent = "";
+  ulCreate.textContent = "";
+  // For loop to loop through all questions in array
+  for (var i = 0; i < questionSet.length; i++) {
+      // Appends question only
+      var userQuestion = questionSet[index].question;
+      var userChoices = questionSet[index].choices;
+      questionContainer.textContent = userQuestion;
+  }
+  userChoices.forEach(function (newItem) {
+    var listItem = document.createElement("li");
+    listItem.textContent = newItem;
+    questionContainer.appendChild(ulCreate);
+    ulCreate.appendChild(listItem);
+    listItem.addEventListener("click", (checkAnswer));
+  })
+}
+
+
+// Check whether answer is correct and penalize if not
+function checkAnswer(event){
+  var userAnswer = event.target;
+  // Check for wrong answer and penalize 10 seconds if so
+  if(userAnswer.textContent != questionSet[index].correctAnswer){
+    timerCount = timerCount - penalty;
+    if(timerCount <= 0){
+      clearInterval(timer);
+      gameOver();
+      return;
     }
-  } else{
+  }
+  index++;
+  if (index >= questionSet.length) {
+    userScore = timerCount;
+    clearInterval(timer);
+    gameOver();
     return;
+  } else {
+      displayQuestion(index);
   }
 }
 
-// The startGame function is called when the start button is clicked
-function startGame() {
-  // Prevents start button from being clicked when round is in progress
-  startButton.disabled = true;
-  renderQuestion();
+
+// Stores the scores in local storage
+function gameOver() {
+  var userInitials = prompt("Please enter your initials.");
+  var userScore = timerCount;
+  timerCount = 0;
+  var highScores = [userInitials, userScore];
+  localStorage.setItem("HighScores", highScores);
+  timerElement.textContent = timerCount;
 }
 
 
-
-
-
-
-
-
-
-// These functions are used by init
-function getScore() {
+// Retrive score from local storage and display
+function displayScore() {
   // Get stored value from client storage, if it exists
   var storedScores = localStorage.getItem("highScore");
-  // If stored value doesn't exist, set counter to 0
-  if (storedScores === null) {
-    
-  } else {
-    // If a value is retrieved from client storage set the winCounter to that value
-    
-  }
-  //Render win count to page
-  win.textContent = winCounter;
+  
+  questionContainer.textContent = "";
+  ulCreate.textContent = "";
+  var listScore = document.createElement("li");
 }
-
-
-function checkWin() {
-  // If the word equals the blankLetters array when converted to string, set isWin to true
-  if (chosenOption === blanksLetters.join("")) {
-    // This value is used in the timer function to test if win condition is met
-    isWin = true;
-  }
-}
-
-// Tests if guessed option is the true answer
 
 
 
