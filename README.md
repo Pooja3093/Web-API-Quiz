@@ -8,7 +8,7 @@ This ia a timed quiz. For each incorrect answer 10 seconds penalty is deducted f
 
 ## Links:
 
-[GitHub Repository]()
+[GitHub Repository](https://github.com/Pooja3093/Web-API-Quiz.git)
 
 [Deployed Application]()
 
