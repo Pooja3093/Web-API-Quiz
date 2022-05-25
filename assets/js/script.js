@@ -144,11 +144,11 @@ function gameOver() {
   storedScores = localStorage.getItem("HighScore");
   storedInitials = localStorage.getItem("Initials");
   if(storedScores === null && storedInitials === null){
-    alert("Congratulations! You made a new high score." + "\n" + "Your score: " + userScore);
+    alert("Congratulations! You made a new high score: " + userScore);
     localStorage.setItem("HighScore", userScore);
     localStorage.setItem("Initials", userInitials);
   } else if(userScore >= storedScores){
-    alert("Congratulations! You made a new high score.");
+    alert("Congratulations! You made a new high score: " + userScore);
     localStorage.setItem("HighScore", userScore);
     localStorage.setItem("Initials", userInitials);
   } else {
