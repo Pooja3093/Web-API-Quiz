@@ -20,7 +20,7 @@ A multiple choice quiz is created using HTML and Javascript. And it is styled us
 
 This project emphasizes the use of using Javascript to make dynamic changes to an HMTL document.
 
-THe page loads with a header containing a title, start button and timer and paragraph oulining the rules. 
+The page loads with a header containing a title, start button and timer and paragraph oulining the rules. 
 
 Once the START button is clicked, the timer will start with 60 seconds and decreasing by 1 second. On click of start button, first question will be displayed and a list of options will be dyanamically created and displayed.
 
